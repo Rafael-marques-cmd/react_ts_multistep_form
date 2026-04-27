@@ -1,24 +1,53 @@
 // Components
 import UseForm from "./components/UseForm";
-import Thanks from "./components/Thanks";
 import ReviewForm from "./components/ReviewForm";
+import Thanks from "./components/Thanks";
 import Steps from "./components/Steps";
-import { GrFormNext, GrFormPrevious } from "react-icons/gr";
 
+import { GrFormNext, GrFormPrevious } from "react-icons/gr";
+import { FiSend } from "react-icons/fi";
 
 // Hooks
-import { useForm } from "./hooks/UseForms";
+import { useState } from "react";
+import { useForm } from "./hooks/useForm";
 
 // CSS
 import "./App.css";
-import "./components/Steps.css";
+
+type FormFields = {
+  name: string;
+  email: string;
+  review: string;
+  comment: string;
+};
+
+const formTemplate: FormFields = {
+  name: "",
+  email: "",
+  review: "",
+  comment: "",
+};
 
 function App() {
-  const formComponents = [<UseForm />, <ReviewForm />, <Thanks />];
-  const { currentStep, currentComponent, changeStep } = useForm(formComponents);
+  const [data, setData] = useState(formTemplate);
+
+  const updateFieldHandler = (key: string, value: string) => {
+    setData((prev) => {
+      return { ...prev, [key]: value };
+    });
+  };
+
+  const formComponents = [
+    <UseForm data={data} updateFieldHandler={updateFieldHandler} />,
+    <ReviewForm data={data} updateFieldHandler={updateFieldHandler} />,
+    <Thanks data={data} />,
+  ];
+
+  const { currentStep, currentComponent, changeStep, isLastStep } =
+    useForm(formComponents);
 
   return (
-    <div className="App">
+    <div className="app">
       <div className="header">
         <h2>Deixe sua avaliação</h2>
         <p>
@@ -28,7 +57,6 @@ function App() {
       </div>
       <div className="form-container">
         <Steps currentStep={currentStep} />
-        <p>passos</p>
         <form onSubmit={(e) => changeStep(currentStep + 1, e)}>
           <div className="inputs-container">{currentComponent}</div>
           <div className="actions">
@@ -36,10 +64,18 @@ function App() {
               <GrFormPrevious />
               <span>Voltar</span>
             </button>
-            <button type="submit">
-              <span>Avançar</span>
-              <GrFormNext />
-            </button>
+
+            {!isLastStep ? (
+              <button type="submit">
+                <span>Avançar</span>
+                <GrFormNext />
+              </button>
+            ) : (
+              <button type="button" onClick={() => console.log(data)}>
+                <span>Enviar</span>
+                <FiSend />
+              </button>
+            )}
           </div>
         </form>
       </div>
