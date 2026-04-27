@@ -68,7 +68,7 @@ const ReviewForm = ({ data, updateFieldHandler }: ReviewProps) => {
       <div className="form-control">
         <label htmlFor="comment">Comentário:</label>
         <textarea
-          name="cooment"
+          name="comment"
           id="comment"
           placeholder="Conte como foi a sua experiência com o produto..."
           value={data.comment || ""}
