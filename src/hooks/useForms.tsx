@@ -1,4 +1,5 @@
-import { FormEvent, ReactElement, useState } from "react";
+import { useState } from "react";
+import type { FormEvent, ReactElement } from "react";
 
 export function useForm(steps: ReactElement[]) {
   const [currentStep, setCurrentStep] = useState(0);
